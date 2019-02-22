@@ -1,0 +1,16 @@
+opam-version: "2.0"
+name: "hello"
+version: "~dev"
+synopsis: "This is synopsis"
+maintainer: "Hiroshi Doyu <hiroshi.doyu@ericsson.com>"
+authors: "Hiroshi Doyu <hiroshi.doyu@ericsson.com>"
+license: "MIT"
+homepage: "https://www.google.com"
+bug-reports: "https://www.google.com"
+depends: ["dune"]
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "--verbose" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+dev-repo: "git+file:///home/ehirdoy/src/work/dune/hello"

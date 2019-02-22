@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# emulating "dune build -verbose ./hello.a"
+
+BUILD="_build/default"
+export PATH=$PATH:"/home/ehirdoy/.opam/4.06.1+lto/bin/"
+FLAGS="-w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs -g"
+SRC="-impl hello.ml"
+DEP="ocamldep.opt"
+CC="ocamlopt.opt $FLAGS -verbose -lto"
+CMX=".hello.objs/native/hello.cmx"
+OBJ=".hello.objs/native/hello.o"
+INC="-I .hello.objs/byte -I .hello.objs/native"
+
+rm -rf $BUILD
+mkdir -p $BUILD/.hello.objs/{byte,native}
+cp hello.ml $BUILD/
+cd $BUILD
+
+$DEP -modules $SRC > .hello.objs/hello.ml.d
+ocamlc.opt $FLAGS -bin-annot -I .hello.objs/byte -no-alias-deps -opaque -o .hello.objs/byte/hello.cmo -c $SRC
+
+# generating hello.{o,cmx}
+$CC $INC -intf-suffix .ml -no-alias-deps -opaque -o $CMX -c $SRC
+
+# NG: generating hello.{a,cmxa}
+$CC -a -o hello.cmxa $CMX
+# Error (warning 63): The required module Hello was built without -lto. Linking it in -lto mode will probably not be possible.
+
+# OK: generating hello.{a,cmxa}, ignoring lto
+$CC -no-lto -a -o hello.cmxa $CMX
