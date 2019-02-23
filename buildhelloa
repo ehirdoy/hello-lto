@@ -21,7 +21,7 @@ $DEP -modules $SRC > .hello.objs/hello.ml.d
 ocamlc.opt $FLAGS -bin-annot -I .hello.objs/byte -no-alias-deps -opaque -o .hello.objs/byte/hello.cmo -c $SRC
 
 # generating hello.{o,cmx}
-$CC $INC -intf-suffix .ml -no-alias-deps -opaque -o $CMX -c $SRC
+$CC $INC -intf-suffix .ml -no-alias-deps -o $CMX -c $SRC
 
 # NG: generating hello.{a,cmxa}
 $CC -a -o hello.cmxa $CMX
